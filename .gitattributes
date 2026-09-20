@@ -1,0 +1,12 @@
+* text=auto eol=lf
+*.ps1   text eol=crlf working-tree-encoding=UTF-8
+*.psm1  text eol=crlf working-tree-encoding=UTF-8
+*.psd1  text eol=crlf working-tree-encoding=UTF-8
+*.json  text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.md    text eol=lf
+*.zip   binary
+*.png   binary
+*.jpg   binary
+*.exe   binary
