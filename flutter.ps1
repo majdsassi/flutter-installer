@@ -87,3 +87,25 @@ catch {
     Write-Host "Download stopped." -ForegroundColor Yellow
     exit 1
 }
+#extract the flutter SDK in desired diroctory 
+if ([System.IO.File]::Exists($file_name)) {
+    Write-Host ""
+    Write-Host "Extracting Flutter SDK..."
+    $extract_path = Join-Path `
+        $env:USERPROFILE `
+        "develop"
+
+    if (-not (Test-Path $extract_path)) {
+        New-Item -ItemType Directory -Path $extract_path -Force | Out-Null
+    }
+
+    $flutter_dir = Join-Path $extract_path "flutter"
+    if (Test-Path $flutter_dir) {
+        Remove-Item $flutter_dir -Recurse -Force -ErrorAction SilentlyContinue
+    }
+
+    Expand-Archive -Path $file_name -DestinationPath $extract_path -Force
+
+    Write-Host ""
+    Write-Host "Flutter SDK extracted to: $extract_path"
+}
