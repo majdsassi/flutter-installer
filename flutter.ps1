@@ -6,6 +6,11 @@ do {
  $release_counter++ ;
  $last_release =  $release_response.releases[$release_counter]; 
 }while($release_response.releases[$release_counter].channel -ne "stable") ;
-Write-Output $last_release ; 
+# create the download url
+$download_prefix = "https://storage.googleapis.com/flutter_infra_release/releases" ; 
+$download_uri = -join($download_prefix,'/',$release_response.releases[$release_counter].archive.ToString()) ; 
+$file_name = Join-Path -Path $env:TEMP -ChildPath "flutter.zip" ; 
+Invoke-WebRequest -Uri $download_uri -OutFile $file_name ; 
+
 
 
