@@ -7,3 +7,5 @@ do {
  $last_release =  $release_response.releases[$release_counter]; 
 }while($release_response.releases[$release_counter].channel -ne "stable") ;
 Write-Output $last_release ; 
+
+
