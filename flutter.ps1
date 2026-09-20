@@ -87,3 +87,51 @@ catch {
     Write-Host "Download stopped." -ForegroundColor Yellow
     exit 1
 }
+#extract the flutter SDK in desired diroctory 
+if ([System.IO.File]::Exists($file_name)) {
+    Write-Host ""
+    Write-Host "Extracting Flutter SDK..."
+    $extract_path = Join-Path `
+        $env:USERPROFILE `
+        "develop"
+
+    if (-not (Test-Path $extract_path)) {
+        New-Item -ItemType Directory -Path $extract_path -Force | Out-Null
+    }
+
+    $flutter_dir = Join-Path $extract_path "flutter"
+    if (Test-Path $flutter_dir) {
+        Remove-Item $flutter_dir -Recurse -Force -ErrorAction SilentlyContinue
+    }
+
+    Expand-Archive -Path $file_name -DestinationPath $extract_path -Force
+
+    Write-Host ""
+    Write-Host "Flutter SDK extracted to: $extract_path"
+}
+# add flutter to PATH permanently 
+$flutter_bin = Join-Path `
+    $env:USERPROFILE `
+    "develop\flutter\bin"
+
+$user_path = [Environment]::GetEnvironmentVariable("Path", "User")
+
+if (($user_path -split ';') -notcontains $flutter_bin) {
+    $new_user_path = if ([string]::IsNullOrWhiteSpace($user_path)) {
+        $flutter_bin
+    } else {
+        "$user_path;$flutter_bin"
+    }
+    [Environment]::SetEnvironmentVariable("Path", $new_user_path, "User")
+    Write-Host "Added to User PATH: $flutter_bin" -ForegroundColor Green
+} else {
+    Write-Host "Already in User PATH: $flutter_bin" -ForegroundColor Yellow
+}
+
+# refresh la session 
+$env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" +
+            [Environment]::GetEnvironmentVariable("Path", "User")
+
+Write-Host ""
+Write-Host "Flutter is ready. Try:" -ForegroundColor Cyan
+Write-Host "  flutter --version" -ForegroundColor Cyan
