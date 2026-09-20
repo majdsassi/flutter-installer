@@ -9,8 +9,5 @@ do {
 # create the download url
 $download_prefix = "https://storage.googleapis.com/flutter_infra_release/releases" ; 
 $download_uri = -join($download_prefix,'/',$release_response.releases[$release_counter].archive.ToString()) ; 
-$file_name = Join-Path -Path $env:TEMP -ChildPath "flutter.zip" ; 
-Invoke-WebRequest -Uri $download_uri -OutFile $file_name ; 
-
-
-
+$file_name = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath "flutter.zip" ; 
+Invoke-WebRequest -Uri $download_uri -OutFile $file_name ;
